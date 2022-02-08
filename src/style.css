@@ -1,0 +1,8 @@
+table{
+  column-gap: 0px;
+}
+td,th{
+  border: solid 1px black;
+  margin:0px;
+  padding:10px;
+}
