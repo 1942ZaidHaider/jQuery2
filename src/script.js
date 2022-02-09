@@ -39,24 +39,34 @@ var products = [
 
 $(function () {
   createPage();
+  addEvents();
 });
+//Create the page
 function createPage() {
   console.log("Creating Page");
 
   //Creating filter div
   filter = $("<div></div>").attr("id", "filter"); //Div for filters
+  //Creating Filters
+  let tmp = [];
   selectBrand = $("<select></select>"); //Brand filter
   selectBrand.append($(`<option></option>`).text("All"));
   selectBrand.attr("name", "brand");
   for (let i of products) {
-    selectBrand.append($(`<option></option>`).text(i.brand));
+    if (!tmp.includes(i.brand)) {
+      tmp.push(i.brand);
+      selectBrand.append($(`<option></option>`).text(i.brand));
+    }
   }
-  //Creating Filters
+  tmp = [];
   selectOs = $("<select></select>"); //Os filter
   selectOs.attr("name", "brand");
   selectOs.append($(`<option></option>`).text("All"));
   for (let i of products) {
-    selectOs.append($(`<option></option>`).text(i.os));
+    if (!tmp.includes(i.os)) {
+      tmp.push(i.os);
+      selectOs.append($(`<option></option>`).text(i.os));
+    }
   }
   filter.append($("<label></label>").text("Brand").attr("for", "brand"));
   filter.append(selectBrand);
@@ -65,7 +75,7 @@ function createPage() {
   );
   filter.append(selectOs);
   $("#main").append(filter);
-  
+
   //Creating table
   content = $("<div></div>").attr("id", "content");
   table = $("<table></table>");
@@ -74,9 +84,77 @@ function createPage() {
   );
   for (i of products) {
     table.append(
-      `<tr><td>${i.id}</td><td>${i.name}</td><td>${i.os}</td><td>${i.brand}</td><td><a href="#">Delete</a></td></tr>`
+      `<tr><td>${i.id}</td><td>${i.name}</td><td class="os">${i.os}</td><td class="brand">${i.brand}</td><td><a href="#">Delete</a></td></tr>`
     );
   }
   $("#main").append(table);
+
   //Creating search
+  searchDiv = $("<div></div>").attr("id", "search_div");
+  searchInput = $("<input type='text'>").attr("name", "search_input");
+  searchButton = $(`<button>Search</button>`);
+  searchDiv.append(searchInput);
+  searchDiv.append(searchButton);
+  $("#main").append(searchDiv);
+}
+//Add events
+function addEvents() {
+  //Search
+  searchButton.click(function () {
+    inpVal = searchInput.val().toUpperCase();
+    $("tr").each(function () {
+      //console.log($(this).html());
+      $(this).show();
+      chkVal1 = $(this).children("td").slice(0, 1).text().toUpperCase();
+      chkVal2 = $(this).children("td").slice(1, 2).text().toUpperCase();
+      if (!inpVal) {
+      } else if (
+        $(this).children("td").length > 0 &&
+        !chkVal1.includes(inpVal) &&
+        !chkVal2.includes(inpVal)
+      ) {
+        console.log();
+        $(this).hide();
+      }
+    });
+  });
+  //Filter
+  //Filter Brand
+  selectBrand.change(function () {
+    chk = this.value;
+    $("tr").each(function () {
+      //console.log($(this).html());
+      $(this).show();
+      if (chk == "All") {
+        $(this).show();
+      } else if (chk != $(this).children(".brand").text()) {
+        console.log(chk + "< >" + $(this).children(".brand").html());
+        $(this).hide();
+      }
+    });
+  });
+  selectOs.change(function () {
+    chk = this.value;
+    $("tr").each(function () {
+      //console.log($(this).html());
+      $(this).show();
+      if (chk == "All") {
+        $(this).show();
+      } else if (chk != $(this).children(".os").text()) {
+        console.log(chk + "< >" + $(this).children(".os").html());
+        $(this).hide();
+      }
+    });
+  });
+  $("a").click(function(){
+    id=$(this).parents("tr").children("td").first().html();
+    console.log(id);
+    for(let i=0;i<products.length;i++){
+      if(products[i].id==id){
+        products.splice(i,1);
+        break;
+      }
+    }
+    $(this).parents("tr").remove();
+  })
 }
