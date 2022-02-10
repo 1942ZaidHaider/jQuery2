@@ -103,6 +103,7 @@ function addEvents() {
   //Search
   searchButton.click(function () {
     inpVal = searchInput.val().toUpperCase();
+    searchInput.val("");
     $("tr").each(function () {
       //console.log($(this).html());
       $(this).show();
