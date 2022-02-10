@@ -37,6 +37,7 @@ var products = [
   },
 ];
 
+//on-ready
 $(function () {
   createPage();
   addEvents();
@@ -121,42 +122,49 @@ function addEvents() {
   //Filter Events
   //Filter Brand
   selectBrand.change(function () {
-    chk = this.value;
-    $("tr").each(function () {
-      //console.log($(this).html());
-      $(this).show();
-      if (chk == "All") {
-        $(this).show();
-      } else if (chk != $(this).children(".brand").text() && $(this).children("td").length>0) {
-        console.log(chk + "< >" + $(this).children(".brand").html());
-        $(this).hide();
-      }
-    });
+    filterProducts();
   });
   //OS Filter
   selectOs.change(function () {
-    chk = this.value;
-    $("tr").each(function () {
-      //console.log($(this).html());
-      $(this).show();
-      if (chk == "All") {
-        $(this).show();
-      } else if (chk != $(this).children(".os").text() && $(this).children("td").length>0) {
-        console.log(chk + "< >" + $(this).children(".os").html());
-        $(this).hide();
-      }
-    });
+    filterProducts();
   });
   // Remove Entry
-  $("a").click(function(){
-    id=$(this).parents("tr").children("td").first().html();
+  $("a").click(function () {
+    id = $(this).parents("tr").children("td").first().html();
     console.log(id);
-    for(let i=0;i<products.length;i++){
-      if(products[i].id==id){
-        products.splice(i,1);
+    for (let i = 0; i < products.length; i++) {
+      if (products[i].id == id) {
+        products.splice(i, 1);
         break;
       }
     }
     $(this).parents("tr").remove();
-  })
+  });
+}
+function filterProducts() {
+  let chkOs = selectOs.find(":selected").text();
+  let chkBrand = selectBrand.find(":selected").text();
+  $("tr").each(function () {
+    if (
+      (hasFilter("brand", chkBrand, $(this)) &&
+      hasFilter("os", chkOs, $(this))) ||
+      $(this).children("th").length>0
+    ) {
+      $(this).show();
+    }
+    else{
+      $(this).hide();
+    }
+  });
+}
+function hasFilter(t, term, ele) {
+  if (t.toUpperCase() == "BRAND") {
+    cmp = ele.children(".brand").text().toUpperCase();
+    console.log(cmp,term);
+    return cmp == term.toUpperCase() || term == "All";
+  } else if (t.toUpperCase() == "OS") {
+    cmp = ele.children(".os").text().toUpperCase();
+    console.log(cmp,term);
+    return cmp == term.toUpperCase() || term == "All";
+  }
 }
