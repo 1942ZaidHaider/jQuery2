@@ -118,7 +118,7 @@ function addEvents() {
       }
     });
   });
-  //Filter
+  //Filter Events
   //Filter Brand
   selectBrand.change(function () {
     chk = this.value;
@@ -127,12 +127,13 @@ function addEvents() {
       $(this).show();
       if (chk == "All") {
         $(this).show();
-      } else if (chk != $(this).children(".brand").text()) {
+      } else if (chk != $(this).children(".brand").text() && $(this).children("td").length>0) {
         console.log(chk + "< >" + $(this).children(".brand").html());
         $(this).hide();
       }
     });
   });
+  //OS Filter
   selectOs.change(function () {
     chk = this.value;
     $("tr").each(function () {
@@ -140,12 +141,13 @@ function addEvents() {
       $(this).show();
       if (chk == "All") {
         $(this).show();
-      } else if (chk != $(this).children(".os").text()) {
+      } else if (chk != $(this).children(".os").text() && $(this).children("td").length>0) {
         console.log(chk + "< >" + $(this).children(".os").html());
         $(this).hide();
       }
     });
   });
+  // Remove Entry
   $("a").click(function(){
     id=$(this).parents("tr").children("td").first().html();
     console.log(id);
